@@ -30,6 +30,58 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+
+# get all people
+@app.route('/allpeople', methods=['GET'])
+def getAllPeople():
+    try:
+        people = People.query.all()
+        people_serialize = list(map(lambda x: x.serialize(), people))
+        return jsonify(people_serialize)
+    except:
+        raise APIException('No hay personajes en la BBDD', 404)
+
+
+# get one people
+@app.route('/allpeople/<int:people_id>')
+def getOnePeople(people_id):
+    try:
+        people = People.query.get(people_id)
+        return jsonify(people.serialize())
+    except:
+        raise APIException('Personaje no encontrado', 404)
+
+
+# get all planets
+@app.route('/allplanets', methods=['GET'])
+def getAllPlanets():
+    try:
+        planet = Planet.query.all()
+        planet_serialize = list(map(lambda x: x.serialize(), planet))
+        return jsonify(planet_serialize)
+    except:
+        raise APIException('No hay planetas en la BBDD', 404)
+
+# get one planet
+@app.route('/allplanets/<int:planet_id>')
+def getOnePlanet():
+    try:
+        planet = Planet.query.get(planet_id)
+        return jsonify(planet.serialize())
+    except:
+        raise APIException('Planeta no encontrado', 404)
+
+# get all users
+@app.route('/allusers', methods=['GET'])
+def getAllUsers():
+    try:
+        users = User.query.all()
+        users_serialize = list(map(lambda x: x.serialize(), users))
+        return jsonify(people_serialize)
+    except:
+        raise APIException('No hay usuarios en la BBDD', 404)
+
+
 @app.route('/user', methods=['GET'])
 def handle_hello():
 
