@@ -138,6 +138,51 @@ def addFavouriteCharacter(people_id):
     return jsonify(f"Personaje {people} añadido"), 200
 
 
+# delete favourite planet
+@app.route('/favourite/planet/<int:planet_id>', methods=['DELETE'])
+def deleteFavouritePlanet(planet_id):
+
+    #Asumimos que nos llega un body -> {"User": id}
+    resquest_body = request.json.get('User')
+
+    user = User.query.get(resquest_body)
+    if not user:
+        raise APIException('Usuario no existe', 404)
+
+    planet = Planet.query.get(planet_id)
+    if not planet:
+        raise APIException('Planeta no existe', 404)
+
+    if planet not in user.planet_favourites:
+        raise APIException('Planeta no existe en favoritos', 404)
+
+    user.planet_favourites.remove(planet)
+    db.session.commit()
+    return jsonify(f'El planeta {planet} ha sido eliminado de favoritos'), 200
+
+# delete favourite people
+@app.route('/favourite/planet/<int:people_id>', methods=['DELETE'])
+def deleteFavouritePeople(people_id):
+
+    #Asumimos que nos llega un body -> {"User": id}
+    resquest_body = request.json.get('User')
+
+    user = User.query.get(resquest_body)
+    if not user:
+        raise APIException('Usuario no existe', 404)
+
+    people = People.query.get(people_id)
+    if not people:
+        raise APIException('Personaje no existe', 404)
+
+    if people not in user.people_favourites:
+        raise APIException('El personaje no existe en favoritos', 404)
+
+    user.people_favourites.remove(people)
+    db.session.commit()
+    return jsonify(f'El personaje {people} ha sido eliminado de favoritos'), 200
+
+
 @app.route('/user', methods=['GET'])
 def handle_hello():
 
